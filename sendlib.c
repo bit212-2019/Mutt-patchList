@@ -80,8 +80,6 @@ const char B64Chars[64] = {
   '8', '9', '+', '/'
 };
 
-static char MsgIdPfx = 'A';
-
 static void transform_to_7bit (BODY *a, FILE *fpin);
 
 static void encode_quoted (FGETCONV * fc, FILE *fout, int istext)
@@ -2415,19 +2413,19 @@ const char *mutt_fqdn(short may_hide_host)
 char *mutt_gen_msgid (void)
 {
   char buf[SHORT_STRING];
-  time_t now;
-  struct tm *tm;
+  unsigned char uuid[16];
   const char *fqdn;
 
-  now = time (NULL);
-  tm = gmtime (&now);
+  mutt_random_bytes((char *) &uuid, sizeof(uuid));
+
   if (!(fqdn = mutt_fqdn(0)))
     fqdn = NONULL(Hostname);
 
-  snprintf (buf, sizeof (buf), "<%d%02d%02d%02d%02d%02d.G%c%u@%s>",
-	    tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour,
-	    tm->tm_min, tm->tm_sec, MsgIdPfx, (unsigned int)getpid (), fqdn);
-  MsgIdPfx = (MsgIdPfx == 'Z') ? 'A' : MsgIdPfx + 1;
+  snprintf (buf, sizeof (buf),
+	    "<%02x%02x%02x%02x-%02x%02x-%02x%02x-%02x%02x-%02x%02x%02x%02x%02x%02x@%s>",
+	    uuid[0], uuid[1], uuid[2], uuid[3], uuid[4], uuid[5], uuid[6],
+	    uuid[7], uuid[8], uuid[9], uuid[10], uuid[11], uuid[12], uuid[13],
+	    uuid[14], uuid[15], fqdn);
   return (safe_strdup (buf));
 }
 

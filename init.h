@@ -823,6 +823,18 @@ struct option_t MuttVars[] = {
   ** to find out whether an encrypted message is also signed.
   ** (Crypto only)
   */
+  { "crypt_sign_encrypted", DT_QUAD, R_NONE, {.l=OPT_CRYPTSIGNENCRYPTED}, {.l=MUTT_NO} },
+  /*
+  ** .pp
+  ** If an email is marked for encryption but not for signing, this
+  ** quadoption controls whether to sign the email too.
+  ** .pp
+  ** This might be helpful for those who have $$crypt_opportunistic_encrypt
+  ** enabled, but don't want to enable $$crypt_autosign.  Setting this
+  ** would automatically enable signing when opportunistic encryption
+  ** enabled encryption.
+  ** (Crypto only)
+  */
   { "crypt_timestamp", DT_BOOL, R_NONE, {.l=OPTCRYPTTIMESTAMP}, {.l=1} },
   /*
   ** .pp

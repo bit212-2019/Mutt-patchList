@@ -2498,6 +2498,18 @@ main_loop:
 
   if (WithCrypto)
   {
+    if ((sctx->msg->security & ENCRYPT) &&
+        !(sctx->msg->security & SIGN) &&
+        (query_quadoption (OPT_CRYPTSIGNENCRYPTED,
+                           /* L10N:
+                              Prompt for $crypt_sign_encrypted quadoption to
+                              sign an email marked for encryption too
+                           */
+                           _("Sign encrypted mail?")) == MUTT_YES))
+    {
+      sctx->msg->security |= SIGN;
+    }
+
     if (sctx->msg->security & (ENCRYPT | SIGN | AUTOCRYPT))
     {
       /* save the decrypted attachments */

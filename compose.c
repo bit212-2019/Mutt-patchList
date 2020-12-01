@@ -1065,8 +1065,7 @@ int mutt_compose_menu (SEND_CONTEXT *sctx)
   update_crypt_info (&rd);
 
   /* Since this is rather long lived, we don't use the pool */
-  fname = mutt_buffer_new ();
-  mutt_buffer_increase_size (fname, LONG_STRING);
+  fname = mutt_buffer_new (LONG_STRING);
 
   /* Another alternative would be to create a resume op and:
    *   mutt_unget_event (0, OP_COMPOSE_EDIT_MESSAGE_RESUME);

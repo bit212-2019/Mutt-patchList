@@ -32,21 +32,23 @@ static BUFFER **BufferPool = NULL;
 
 
 /* Creates and initializes a BUFFER */
-BUFFER *mutt_buffer_new (void)
+BUFFER *mutt_buffer_new (size_t init_size)
 {
   BUFFER *b;
 
   b = safe_malloc (sizeof(BUFFER));
 
-  mutt_buffer_init (b);
+  mutt_buffer_init (b, init_size);
 
   return b;
 }
 
 /* Initialize a new BUFFER */
-BUFFER *mutt_buffer_init (BUFFER *b)
+BUFFER *mutt_buffer_init (BUFFER *b, size_t init_size)
 {
   memset (b, 0, sizeof(BUFFER));
+  if (init_size > 0)
+    mutt_buffer_increase_size (b, init_size);
   return b;
 }
 
@@ -77,14 +79,14 @@ void mutt_buffer_rewind (BUFFER *b)
 }
 
 /* Creates and initializes a BUFFER by copying the seed string. */
-BUFFER *mutt_buffer_from (char *seed)
+BUFFER *mutt_buffer_from (const char *seed)
 {
   BUFFER *b;
 
   if (!seed)
     return NULL;
 
-  b = mutt_buffer_new ();
+  b = mutt_buffer_new (0);
   b->data = safe_strdup (seed);
   b->dsize = mutt_strlen (seed);
   b->dptr = (char *) b->data + b->dsize;
@@ -233,9 +235,7 @@ static void increase_buffer_pool (void)
   safe_realloc (&BufferPool, BufferPoolLen * sizeof (BUFFER *));
   while (BufferPoolCount < 5)
   {
-    newbuf = mutt_buffer_new ();
-    mutt_buffer_increase_size (newbuf, LONG_STRING);
-    mutt_buffer_clear (newbuf);
+    newbuf = mutt_buffer_new (LONG_STRING);
     BufferPool[BufferPoolCount++] = newbuf;
   }
 }

@@ -1870,8 +1870,7 @@ static int send_message_setup (SEND_CONTEXT *sctx, const char *tempfile,
 
   /* Allocate the buffer due to the long lifetime, but
    * pre-resize it to ensure there are no NULL data field issues */
-  sctx->fcc = mutt_buffer_new ();
-  mutt_buffer_increase_size (sctx->fcc, LONG_STRING);
+  sctx->fcc = mutt_buffer_new (LONG_STRING);
 
   /* Delay expansion of aliases until absolutely necessary--shouldn't
    * be necessary unless we are prompting the user or about to execute a

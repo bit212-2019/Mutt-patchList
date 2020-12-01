@@ -1345,8 +1345,8 @@ int imap_copy_messages (CONTEXT* ctx, HEADER* h, const char* dest, int delete)
   /* loop in case of TRYCREATE */
   do
   {
-    mutt_buffer_init (&sync_cmd);
-    mutt_buffer_init (&cmd);
+    mutt_buffer_init (&sync_cmd, 0);
+    mutt_buffer_init (&cmd, 0);
 
     /* Null HEADER* means copy tagged messages */
     if (!h)

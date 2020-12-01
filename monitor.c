@@ -375,7 +375,7 @@ static int monitor_resolve (MONITORINFO *info, BUFFY *buffy)
   if (fmt)
   {
     if (!info->_pathbuf)
-      info->_pathbuf = mutt_buffer_new ();
+      info->_pathbuf = mutt_buffer_new (0);
     mutt_buffer_printf (info->_pathbuf, fmt, info->path);
     info->path = mutt_b2s (info->_pathbuf);
   }

@@ -1126,8 +1126,7 @@ fill_buffer (FILE *f, LOFF_T *last_pos, LOFF_T offset, unsigned char **buf,
     b_read = (int) (*last_pos - offset);
     *buf_ready = 1;
 
-    mutt_buffer_init (&stripped);
-    mutt_buffer_increase_size (&stripped, *blen);
+    mutt_buffer_init (&stripped, *blen);
     mutt_buffer_strip_formatting (&stripped, (const char *) *buf, 1);
     /* This should be a noop, because *fmt should be NULL */
     FREE (fmt);   /* __FREE_CHECKED__ */
@@ -1988,7 +1987,7 @@ mutt_pager (const char *banner, const char *fname, int flags, pager_t *extra)
     (rd.lineInfo[i].syntax)[0].first = (rd.lineInfo[i].syntax)[0].last = -1;
   }
 
-  helpstr = mutt_buffer_new ();
+  helpstr = mutt_buffer_new (0);
   mutt_compile_help (buffer, sizeof (buffer), MENU_PAGER, PagerHelp);
   mutt_buffer_strcpy (helpstr, buffer);
   if (IsHeader (extra))

@@ -727,10 +727,8 @@ void _mutt_buffer_select_file (BUFFER *f, int flags, char ***files, int *numfile
 
   if (!LastDir)
   {
-    LastDir = mutt_buffer_new ();
-    mutt_buffer_increase_size (LastDir, _POSIX_PATH_MAX);
-    LastDirBackup = mutt_buffer_new ();
-    mutt_buffer_increase_size (LastDirBackup, _POSIX_PATH_MAX);
+    LastDir = mutt_buffer_new (_POSIX_PATH_MAX);
+    LastDirBackup = mutt_buffer_new (_POSIX_PATH_MAX);
   }
 
   if (!folder)

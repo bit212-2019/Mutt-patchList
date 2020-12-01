@@ -468,9 +468,7 @@ void mutt_folder_hook (const char *path)
 
   current_hook_type = MUTT_FOLDERHOOK;
 
-  mutt_buffer_init (&err);
-  err.dsize = STRING;
-  err.data = safe_malloc (err.dsize);
+  mutt_buffer_init (&err, STRING);
   for (; tmp; tmp = tmp->next)
   {
     if (!tmp->command)
@@ -518,9 +516,7 @@ void mutt_message_hook (CONTEXT *ctx, HEADER *hdr, int type)
 
   current_hook_type = type;
 
-  mutt_buffer_init (&err);
-  err.dsize = STRING;
-  err.data = safe_malloc (err.dsize);
+  mutt_buffer_init (&err, STRING);
   memset (&cache, 0, sizeof (cache));
   for (hook = Hooks; hook; hook = hook->next)
   {
@@ -689,9 +685,7 @@ void mutt_account_hook (const char* url)
   if (inhook)
     return;
 
-  mutt_buffer_init (&err);
-  err.dsize = STRING;
-  err.data = safe_malloc (err.dsize);
+  mutt_buffer_init (&err, STRING);
 
   for (hook = Hooks; hook; hook = hook->next)
   {

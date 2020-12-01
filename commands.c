@@ -762,9 +762,7 @@ void mutt_enter_command (void)
   buffer[0] = 0;
   if (mutt_get_field (":", buffer, sizeof (buffer), MUTT_COMMAND) != 0 || !buffer[0])
     return;
-  mutt_buffer_init (&err);
-  err.dsize = STRING;
-  err.data = safe_malloc(err.dsize);
+  mutt_buffer_init (&err, STRING);
   r = mutt_parse_rc_line (buffer, &err);
   if (err.data[0])
   {
@@ -942,7 +940,7 @@ int mutt_save_message (HEADER *h, int delete, int decode, int decrypt)
    * Leitner <leitner@prz.fu-berlin.de>
    */
   if (!LastSaveFolder)
-    LastSaveFolder = mutt_buffer_new ();
+    LastSaveFolder = mutt_buffer_new (0);
   if (mutt_strcmp (mutt_b2s (buf), ".") == 0)
     mutt_buffer_strcpy (buf, mutt_b2s (LastSaveFolder));
   else

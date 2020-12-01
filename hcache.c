@@ -1267,7 +1267,7 @@ hcache_open_db4 (struct header_cache* h, const char* path)
   if (pagesize <= 0)
     pagesize = 16384;
 
-  h->lockfile = mutt_buffer_new ();
+  h->lockfile = mutt_buffer_new (0);
   mutt_buffer_printf (h->lockfile, "%s-lock-hack", path);
 
   h->fd = open (mutt_b2s (h->lockfile), O_WRONLY | O_CREAT, S_IRUSR | S_IWUSR);

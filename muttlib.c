@@ -1556,8 +1556,8 @@ void mutt_FormatString (char *dest,		/* output buffer */
       /* note: we are resetting dptr and *reading* from the buffer, so we don't
        * want to use mutt_buffer_clear(). */
       mutt_buffer_rewind (srcbuf);
-      word = mutt_buffer_new ();
-      command = mutt_buffer_new ();
+      word = mutt_buffer_new (0);
+      command = mutt_buffer_new (0);
 
       /* Iterate expansions across successive arguments */
       do
@@ -2419,8 +2419,7 @@ int mutt_rmtree (const char* path)
 
   /* We avoid using the buffer pool for this function, because it
    * invokes recursively to an unknown depth. */
-  cur = mutt_buffer_new ();
-  mutt_buffer_increase_size (cur, _POSIX_PATH_MAX);
+  cur = mutt_buffer_new (_POSIX_PATH_MAX);
 
   while ((de = readdir (dirp)))
   {

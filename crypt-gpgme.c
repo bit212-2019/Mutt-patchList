@@ -3048,7 +3048,7 @@ int pgp_gpgme_encrypted_handler (BODY *a, STATE *s)
 
   /* Note: the handler calls mutt_body_handler()
    * so we don't use the pool for this operation. */
-  tempfile = mutt_buffer_new ();
+  tempfile = mutt_buffer_new (0);
   mutt_buffer_mktemp (tempfile);
   if (!(fpout = safe_fopen (mutt_b2s (tempfile), "w+")))
     {
@@ -3154,7 +3154,7 @@ int smime_gpgme_application_handler (BODY *a, STATE *s)
 
   /* Note: the handler calls mutt_body_handler()
    * so we don't use the pool for this operation. */
-  tempfile = mutt_buffer_new ();
+  tempfile = mutt_buffer_new (0);
   mutt_buffer_mktemp (tempfile);
   if (!(fpout = safe_fopen (mutt_b2s (tempfile), "w+")))
     {
@@ -4209,7 +4209,7 @@ verify_key (crypt_key_t *key)
   int maxdepth = 100;
 
   /* because of the do_pager() call below, we avoid using the buffer pool */
-  tempfile = mutt_buffer_new ();
+  tempfile = mutt_buffer_new (0);
   mutt_buffer_mktemp (tempfile);
   if (!(fp = safe_fopen (mutt_b2s (tempfile), "w")))
     {

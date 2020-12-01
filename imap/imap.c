@@ -1239,7 +1239,7 @@ int imap_exec_msgset (IMAP_DATA* idata, const char* pre, const char* post,
   int rc;
   int count = 0, reopen_set = 0;
 
-  cmd = mutt_buffer_new ();
+  cmd = mutt_buffer_new (0);
 
   /* Unlike imap_sync_mailbox(), this function can be called when
    * IMAP_REOPEN_ALLOW is not set.  In that case, the caller isn't
@@ -2242,7 +2242,7 @@ int imap_search (CONTEXT* ctx, const pattern_t* pat)
   if (!do_search (pat, 1))
     return 0;
 
-  mutt_buffer_init (&buf);
+  mutt_buffer_init (&buf, STRING);
   mutt_buffer_addstr (&buf, "UID SEARCH ");
   if (imap_compile_search (pat, &buf) < 0)
   {
@@ -2507,7 +2507,7 @@ int imap_fast_trash (CONTEXT* ctx, char* dest)
     strfcpy (mbox, "INBOX", sizeof (mbox));
   imap_munge_mbox_name (idata, mmbox, sizeof (mmbox), mbox);
 
-  sync_cmd = mutt_buffer_new ();
+  sync_cmd = mutt_buffer_new (0);
   for (n = 0; n < ctx->msgcount; n++)
   {
     if (ctx->hdrs[n]->active && ctx->hdrs[n]->changed &&

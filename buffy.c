@@ -234,7 +234,7 @@ static BUFFY *buffy_new (const char *path)
   char *r = NULL;
 
   buffy = (BUFFY *) safe_calloc (1, sizeof (BUFFY));
-  buffy->pathbuf = mutt_buffer_new ();
+  buffy->pathbuf = mutt_buffer_new (0);
   mutt_buffer_strcpy (buffy->pathbuf, path);
   r = realpath (path, rp);
   buffy->realpath = safe_strdup (r ? rp : path);

@@ -720,7 +720,7 @@ int main (int argc, char **argv, char **environ)
 
         case 'f':
           if (!folder)
-            folder = mutt_buffer_new ();
+            folder = mutt_buffer_new (0);
           mutt_buffer_strcpy (folder, optarg);
           explicit_folder = 1;
           break;
@@ -1034,7 +1034,7 @@ int main (int argc, char **argv, char **environ)
         }
 	else
 	{
-          expanded_infile = mutt_buffer_new ();
+          expanded_infile = mutt_buffer_new (0);
 	  mutt_buffer_strcpy (expanded_infile, infile);
 	  mutt_buffer_expand_path (expanded_infile);
 	  if ((fin = fopen (mutt_b2s (expanded_infile), "r")) == NULL)
@@ -1056,7 +1056,7 @@ int main (int argc, char **argv, char **environ)
        */
       if (!edit_infile)
       {
-        tempfile = mutt_buffer_new ();
+        tempfile = mutt_buffer_new (0);
         mutt_buffer_mktemp (tempfile);
 
         if ((fout = safe_fopen (mutt_b2s (tempfile), "w")) == NULL)
@@ -1269,7 +1269,7 @@ int main (int argc, char **argv, char **environ)
   else
   {
     if (!folder)
-      folder = mutt_buffer_new ();
+      folder = mutt_buffer_new (0);
 
     if (flags & MUTT_BUFFY)
     {

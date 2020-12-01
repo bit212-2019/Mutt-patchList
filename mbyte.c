@@ -549,7 +549,7 @@ int mutt_filter_unprintable (char **s)
   char *p = *s;
   mbstate_t mbstate1, mbstate2;
 
-  b = mutt_buffer_new ();
+  b = mutt_buffer_new (0);
   memset (&mbstate1, 0, sizeof (mbstate1));
   memset (&mbstate2, 0, sizeof (mbstate2));
   for (; (k = mbrtowc (&wc, p, MB_LEN_MAX, &mbstate1)); p += k)

@@ -345,7 +345,7 @@ void mutt_help (int menu)
   const struct binding_t *funcs;
 
   /* We don't use the buffer pool because of the extended lifetime of t */
-  t = mutt_buffer_new ();
+  t = mutt_buffer_new (0);
   mutt_buffer_mktemp (t);
 
   funcs = km_get_table (menu);

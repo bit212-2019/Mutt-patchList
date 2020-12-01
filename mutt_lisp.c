@@ -208,8 +208,7 @@ static int read_eval_sexp (BUFFER *sexp, BUFFER *line)
   if (!line->dptr || !*line->dptr)
     return 0;
 
-  temp_sexp = mutt_buffer_new ();
-  mutt_buffer_increase_size (temp_sexp, mutt_buffer_len (line));
+  temp_sexp = mutt_buffer_new (mutt_buffer_len (line));
 
   rc = read_sexp (temp_sexp, line);
   if (rc <= 0)
@@ -263,7 +262,7 @@ static int lisp_concat (BUFFER *result, BUFFER *list)
 
   mutt_buffer_clear (result);
 
-  arg = mutt_buffer_new ();
+  arg = mutt_buffer_new (0);
 
   rc = read_eval_sexp (arg, list);
   while (rc > 0)
@@ -291,12 +290,12 @@ static int lisp_equal (BUFFER *result, BUFFER *list)
   mutt_buffer_clear (result);
   mutt_buffer_addch (result, 't');
 
-  first_arg = mutt_buffer_new ();
+  first_arg = mutt_buffer_new (0);
   rc = read_eval_sexp (first_arg, list);
   if (rc <= 0)
     goto cleanup;
 
-  arg = mutt_buffer_new ();
+  arg = mutt_buffer_new (0);
   rc = read_eval_sexp (arg, list);
   while (rc > 0)
   {
@@ -322,7 +321,7 @@ static int lisp_not (BUFFER *result, BUFFER *list)
 
   mutt_buffer_clear (result);
 
-  arg = mutt_buffer_new ();
+  arg = mutt_buffer_new (0);
 
   rc = read_eval_sexp (arg, list);
   if (rc > 0 && !mutt_buffer_len (arg))
@@ -341,7 +340,7 @@ static int lisp_and (BUFFER *result, BUFFER *list)
   mutt_buffer_clear (result);
   mutt_buffer_addch (result, 't');
 
-  arg = mutt_buffer_new ();
+  arg = mutt_buffer_new (0);
 
   rc = read_eval_sexp (arg, list);
   while (rc > 0)
@@ -364,7 +363,7 @@ static int lisp_or (BUFFER *result, BUFFER *list)
 
   mutt_buffer_clear (result);
 
-  arg = mutt_buffer_new ();
+  arg = mutt_buffer_new (0);
 
   rc = read_eval_sexp (arg, list);
   while (rc > 0)
@@ -387,7 +386,7 @@ static int lisp_if (BUFFER *result, BUFFER *list)
 
   mutt_buffer_clear (result);
 
-  cond = mutt_buffer_new ();
+  cond = mutt_buffer_new (0);
 
   rc = read_eval_sexp (cond, list);
   if (rc <= 0)
@@ -459,8 +458,7 @@ int mutt_lisp_eval_list (BUFFER *result, BUFFER *line)
   if (!line->dptr || !*line->dptr)
     return 0;
 
-  list = mutt_buffer_new ();
-  mutt_buffer_increase_size (list, mutt_buffer_len (line));
+  list = mutt_buffer_new (mutt_buffer_len (line));
 
   if (read_list (list, line) != 0)
     goto cleanup;
@@ -469,7 +467,7 @@ int mutt_lisp_eval_list (BUFFER *result, BUFFER *line)
   *(list->dptr - 1) = '\0';
   list->dptr = list->data + 1;
 
-  function = mutt_buffer_new ();
+  function = mutt_buffer_new (0);
   if (read_sexp (function, list) <= 0)
     goto cleanup;
   SKIPWS (list->dptr);

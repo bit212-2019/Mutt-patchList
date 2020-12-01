@@ -276,7 +276,7 @@ int mutt_extract_token (BUFFER *dest, BUFFER *tok, int flags)
       tok->dptr = pc + 1;
 
       /* read line */
-      mutt_buffer_init (&expn);
+      mutt_buffer_init (&expn, 0);
       expn.data = mutt_read_line (NULL, &expn.dsize, fp, &line, 0);
       safe_fclose (&fp);
       mutt_wait_filter (pid);
@@ -2936,7 +2936,7 @@ static int parse_source (BUFFER *tmp, BUFFER *s, union pointer_long_t udata, BUF
     return (-1);
   }
 
-  path = mutt_buffer_new ();
+  path = mutt_buffer_new (0);
   mutt_buffer_strcpy (path, tmp->data);
   if (mutt_buffer_len (path) && (*(path->dptr - 1) == '|'))
     mutt_buffer_expand_path_norel (path);
@@ -3434,10 +3434,7 @@ int mutt_query_variables (LIST *queries)
 
   BUFFER err;
 
-  mutt_buffer_init (&err);
-
-  err.dsize = STRING;
-  err.data = safe_malloc (err.dsize);
+  mutt_buffer_init (&err, STRING);
 
   for (p = queries; p; p = p->next)
   {
@@ -3466,10 +3463,7 @@ int mutt_dump_variables (void)
 
   BUFFER err;
 
-  mutt_buffer_init (&err);
-
-  err.dsize = STRING;
-  err.data = safe_malloc (err.dsize);
+  mutt_buffer_init (&err, STRING);
 
   for (i = 0; MuttVars[i].option; i++)
   {
@@ -3554,9 +3548,7 @@ static int mutt_execute_commands (LIST *p)
 {
   BUFFER err;
 
-  mutt_buffer_init (&err);
-  err.dsize = STRING;
-  err.data = safe_malloc (err.dsize);
+  mutt_buffer_init (&err, STRING);
   for (; p; p = p->next)
   {
     if (mutt_parse_rc_line (p->data, &err) != 0)
@@ -3621,8 +3613,7 @@ void mutt_init (int skip_sys_rc, LIST *commands)
   int i, need_pause = 0;
   BUFFER err, *buffer = NULL;
 
-  mutt_buffer_init (&err);
-  mutt_buffer_increase_size (&err, STRING);
+  mutt_buffer_init (&err, STRING);
 
   Groups = hash_create (1031, 0);
   /* reverse alias keys need to be strdup'ed because of idna conversions */

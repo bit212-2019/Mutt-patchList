@@ -345,7 +345,7 @@ msg_search (CONTEXT *ctx, pattern_t* pat, int msgno)
       s.fpin = msg->fp;
       s.flags = MUTT_CHARCONV;
 
-      tempfile = mutt_buffer_new ();
+      tempfile = mutt_buffer_new (0);
       mutt_buffer_mktemp (tempfile);
       if ((s.fpout = safe_fopen (mutt_b2s (tempfile), "w+")) == NULL)
       {
@@ -511,7 +511,7 @@ static int eat_regexp (pattern_t *pat, int flags, BUFFER *s, BUFFER *err)
   int r;
   char *pexpr;
 
-  mutt_buffer_init (&buf);
+  mutt_buffer_init (&buf, 0);
   pexpr = s->dptr;
   if (mutt_extract_token (&buf, s, MUTT_TOKEN_PATTERN | MUTT_TOKEN_COMMENT) != 0 ||
       !buf.data)
@@ -1002,7 +1002,7 @@ static int eat_date (pattern_t *pat, int flags, BUFFER *s, BUFFER *err)
   char *pexpr;
   int rc = -1;
 
-  mutt_buffer_init (&buffer);
+  mutt_buffer_init (&buffer, 0);
   pexpr = s->dptr;
   if (mutt_extract_token (&buffer, s, MUTT_TOKEN_COMMENT | MUTT_TOKEN_PATTERN) != 0
       || !buffer.data)
@@ -1151,7 +1151,10 @@ pattern_t *mutt_pattern_comp (/* const */ char *s, int flags, BUFFER *err)
     return NULL;
   }
 
-  mutt_buffer_init (&ps);
+  /* WARNING:
+   * this is a strange use of a BUFFER, that should probably be changed.
+   */
+  mutt_buffer_init (&ps, 0);
   ps.dptr = s;
   ps.dsize = mutt_strlen (s);
 
@@ -1537,7 +1540,7 @@ static int match_update_dynamic_date (pattern_t *pat)
   BUFFER err;
   int rc;
 
-  mutt_buffer_init (&err);
+  mutt_buffer_init (&err, 0);
   rc = eval_date_minmax (pat, pat->p.str, &err);
   FREE (&err.data);
 
@@ -1874,9 +1877,7 @@ int mutt_pattern_func (int op, char *prompt)
   simple = safe_strdup (mutt_b2s (buf));
   mutt_check_simple (buf, NONULL (SimpleSearch));
 
-  mutt_buffer_init (&err);
-  err.dsize = STRING;
-  err.data = safe_malloc(err.dsize);
+  mutt_buffer_init (&err, STRING);
   if ((pat = mutt_pattern_comp (buf->data, MUTT_FULL_MSG, &err)) == NULL)
   {
     mutt_error ("%s", err.data);
@@ -2018,14 +2019,12 @@ int mutt_search_command (int cur, int op)
     if (!SearchPattern || mutt_strcmp (mutt_b2s (temp), LastSearchExpn))
     {
       BUFFER err;
-      mutt_buffer_init (&err);
+      mutt_buffer_init (&err, STRING);
       set_option (OPTSEARCHINVALID);
       strfcpy (LastSearch, buf, sizeof (LastSearch));
       strfcpy (LastSearchExpn, mutt_b2s (temp), sizeof (LastSearchExpn));
       mutt_message _("Compiling search pattern...");
       mutt_pattern_free (&SearchPattern);
-      err.dsize = STRING;
-      err.data = safe_malloc (err.dsize);
       if ((SearchPattern = mutt_pattern_comp (temp->data, MUTT_FULL_MSG, &err)) == NULL)
       {
         mutt_buffer_pool_release (&temp);

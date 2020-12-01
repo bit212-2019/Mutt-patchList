@@ -75,9 +75,9 @@ static BUFFER *SmimeIntermediateToUse = NULL;
 
 void smime_init (void)
 {
-  SmimeKeyToUse = mutt_buffer_new ();
-  SmimeCertToUse = mutt_buffer_new ();
-  SmimeIntermediateToUse = mutt_buffer_new ();
+  SmimeKeyToUse = mutt_buffer_new (0);
+  SmimeCertToUse = mutt_buffer_new (0);
+  SmimeIntermediateToUse = mutt_buffer_new (0);
 }
 
 void smime_cleanup (void)
@@ -1889,9 +1889,9 @@ static BODY *smime_handle_entity (BODY *m, STATE *s, FILE *outFile)
   if (!(type & APPLICATION_SMIME)) return NULL;
 
   /* Because of the mutt_body_handler() we avoid the buffer pool. */
-  outfile = mutt_buffer_new ();
-  errfile = mutt_buffer_new ();
-  tmpfname = mutt_buffer_new ();
+  outfile = mutt_buffer_new (0);
+  errfile = mutt_buffer_new (0);
+  tmpfname = mutt_buffer_new (0);
 
   mutt_buffer_mktemp (outfile);
   if ((smimeout = safe_fopen (mutt_b2s (outfile), "w+")) == NULL)
@@ -1996,7 +1996,7 @@ static BODY *smime_handle_entity (BODY *m, STATE *s, FILE *outFile)
   if (outFile) fpout = outFile;
   else
   {
-    tmptmpfname = mutt_buffer_new ();
+    tmptmpfname = mutt_buffer_new (0);
     mutt_buffer_mktemp (tmptmpfname);
     if ((fpout = safe_fopen (mutt_b2s (tmptmpfname), "w+")) == NULL)
     {

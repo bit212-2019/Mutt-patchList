@@ -244,9 +244,8 @@ int imap_hcache_store_uid_seqset (IMAP_DATA *idata)
   if (!idata->hcache)
     return -1;
 
-  b = mutt_buffer_new ();
   /* The seqset is likely large.  Preallocate to reduce reallocs */
-  mutt_buffer_increase_size (b, HUGE_STRING);
+  b = mutt_buffer_new (HUGE_STRING);
   imap_msn_index_to_uid_seqset (b, idata);
 
   rc = mutt_hcache_store_raw (idata->hcache, "/UIDSEQSET",
@@ -490,7 +489,7 @@ IMAP_DATA* imap_new_idata (void)
 {
   IMAP_DATA* idata = safe_calloc (1, sizeof (IMAP_DATA));
 
-  idata->cmdbuf = mutt_buffer_new ();
+  idata->cmdbuf = mutt_buffer_new (0);
   idata->cmdslots = ImapPipelineDepth + 2;
   idata->cmds = safe_calloc (idata->cmdslots, sizeof(*idata->cmds));
 

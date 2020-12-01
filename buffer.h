@@ -31,10 +31,10 @@ typedef struct
 /* Convert a buffer to a const char * "string" */
 #define mutt_b2s(b) (b->data ? (const char *)b->data : "")
 
-BUFFER *mutt_buffer_new (void);
-BUFFER *mutt_buffer_init (BUFFER *);
+BUFFER *mutt_buffer_new (size_t);
+BUFFER *mutt_buffer_init (BUFFER *, size_t);
 void mutt_buffer_free (BUFFER **);
-BUFFER *mutt_buffer_from (char *);
+BUFFER *mutt_buffer_from (const char *);
 void mutt_buffer_clear (BUFFER *);
 void mutt_buffer_rewind (BUFFER *);
 

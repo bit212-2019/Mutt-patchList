@@ -1093,7 +1093,7 @@ void mutt_message_to_7bit (BODY *a, FILE *fp)
   }
 
   /* Avoid buffer pool due to recursion */
-  temp = mutt_buffer_new ();
+  temp = mutt_buffer_new (0);
   mutt_buffer_mktemp (temp);
   if (!(fpout = safe_fopen (mutt_b2s (temp), "w+")))
   {

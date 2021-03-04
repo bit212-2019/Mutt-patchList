@@ -1315,6 +1315,9 @@ BODY *mutt_make_message_attach (CONTEXT *ctx, HEADER *hdr, int attach_msg)
            (query_quadoption (OPT_FORWDECRYPT, _("Decrypt message attachment?")) == MUTT_YES))
     try_decrypt = 1;
 
+retry:
+  retry = 0;
+
   if (WithCrypto)
   {
     if ((hdr->security & ENCRYPT) && (try_decode || try_decrypt))
@@ -1324,8 +1327,6 @@ BODY *mutt_make_message_attach (CONTEXT *ctx, HEADER *hdr, int attach_msg)
     }
   }
 
-retry:
-  retry = 0;
   buffer = mutt_buffer_pool_get ();
   mutt_buffer_mktemp (buffer);
   if ((fp = safe_fopen (mutt_b2s (buffer), "w+")) == NULL)

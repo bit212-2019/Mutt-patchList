@@ -1303,7 +1303,7 @@ BODY *mutt_make_message_attach (CONTEXT *ctx, HEADER *hdr, int attach_msg)
   FILE *fp;
   int cmflags, chflags;
   int pgp = WithCrypto? hdr->security : 0;
-  int copy_rc, try_decode = 0, try_decrypt = 0;
+  int copy_rc, try_decode = 0, try_decrypt = 0, retry;
 
   /* If we are attaching a message, ignore OPTMIMEFORWDECODE */
   if (!attach_msg && option (OPTMIMEFORWDECODE))
@@ -1325,6 +1325,7 @@ BODY *mutt_make_message_attach (CONTEXT *ctx, HEADER *hdr, int attach_msg)
   }
 
 retry:
+  retry = 0;
   buffer = mutt_buffer_pool_get ();
   mutt_buffer_mktemp (buffer);
   if ((fp = safe_fopen (mutt_b2s (buffer), "w+")) == NULL)
@@ -1387,29 +1388,49 @@ retry:
   if ((copy_rc != 0) && (try_decode || try_decrypt))
   {
     mutt_clear_error ();
-    if ((try_decode &&
-         /* L10N: Prompt when forwarding a message with
-            $mime_forward_decode set, and there was a problem decoding
-            the message.  If they answer yes the message will be
-            forwarded without decoding.
-         */
-         (mutt_yesorno (_("There was a problem decoding the message for attachment.  Try again with decoding turned off?"), MUTT_YES) == MUTT_YES))
-        ||
-        (try_decrypt &&
-         /* L10N: Prompt when attaching or forwarding a message with
-            $forward_decrypt set, and there was a problem decrypting
-            the message.  If they answer yes the message will be attached
-            without decrypting it.
-         */
-         (mutt_yesorno (_("There was a problem decrypting the message for attachment.  Try again with decryption turned off?"), MUTT_YES) == MUTT_YES)))
+
+    if (try_decode &&
+        /* L10N: Prompt when forwarding a message with
+           $mime_forward_decode set, and there was a problem decoding
+           the message.  If they answer yes the message will be
+           forwarded without decoding.
+        */
+        (mutt_yesorno (_("There was a problem decoding the message for attachment.  Try again with decoding turned off?"),
+                       MUTT_YES) == MUTT_YES))
+    {
+      retry = 1;
+      try_decode = 0;
+      /* Fall back to $forward_decrypt */
+      if (WithCrypto &&
+          (hdr->security & ENCRYPT) &&
+          (query_quadoption (OPT_FORWDECRYPT,
+                             _("Decrypt message attachment?")) == MUTT_YES))
+      {
+        try_decrypt = 1;
+      }
+    }
+
+    else if (try_decrypt &&
+             /* L10N: Prompt when attaching or forwarding a message with
+                $forward_decrypt set, and there was a problem decrypting
+                the message.  If they answer yes the message will be attached
+                without decrypting it.
+             */
+             (mutt_yesorno (_("There was a problem decrypting the message for attachment.  Try again with decryption turned off?"),
+                            MUTT_YES) == MUTT_YES))
+    {
+      retry = 1;
+      try_decrypt = 0;
+    }
+
+    if (retry)
     {
       safe_fclose (&fp);
       mutt_free_body (&body);
-      try_decode = 0;
-      try_decrypt = 0;
       goto retry;
     }
   }
+
   if (copy_rc < 0)
   {
     safe_fclose (&fp);

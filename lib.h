@@ -225,7 +225,7 @@ void *safe_calloc (size_t, size_t);
 void *safe_malloc (size_t);
 void mutt_nocurses_error (const char *, ...);
 void mutt_remove_trailing_ws (char *);
-void mutt_sanitize_filename (char *, short);
+void mutt_sanitize_filename (char *, short remove_slash, short allow_8bit);
 void mutt_str_replace (char **p, const char *s);
 int mutt_mkdir (char *path, mode_t mode);
 void mutt_str_adjust (char **p);

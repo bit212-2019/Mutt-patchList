@@ -104,7 +104,7 @@ int mutt_rfc1524_expand_command (BODY *a, const char *filename, const char *_typ
 
         /* Now copy the parameter value into param buffer */
 	if (option (OPTMAILCAPSANITIZE))
-	  mutt_buffer_sanitize_filename (param, NONULL(_pvalue), 0);
+	  mutt_buffer_sanitize_filename (param, NONULL(_pvalue), 0, 0);
         else
           mutt_buffer_strcpy (param, NONULL(_pvalue));
 
@@ -123,7 +123,7 @@ int mutt_rfc1524_expand_command (BODY *a, const char *filename, const char *_typ
         {
           type = mutt_buffer_pool_get ();
           if (option (OPTMAILCAPSANITIZE))
-            mutt_buffer_sanitize_filename (type, _type, 0);
+            mutt_buffer_sanitize_filename (type, _type, 0, 0);
           else
             mutt_buffer_strcpy (type, _type);
         }
@@ -331,7 +331,7 @@ static int rfc1524_mailcap_parse (BODY *a,
             afilename = mutt_buffer_pool_get ();
             mutt_buffer_strcpy (command, test_command);
             if (option (OPTMAILCAPSANITIZE))
-              mutt_buffer_sanitize_filename (afilename, NONULL(a->filename), 1);
+              mutt_buffer_sanitize_filename (afilename, NONULL(a->filename), 1, 0);
             else
               mutt_buffer_strcpy (afilename, NONULL(a->filename));
 	    mutt_rfc1524_expand_command (a, mutt_b2s (afilename), type, command);

@@ -78,7 +78,7 @@ void mutt_adv_mktemp (BUFFER *buf)
   {
     prefix = mutt_buffer_pool_get ();
     mutt_buffer_strcpy (prefix, buf->data);
-    mutt_sanitize_filename (prefix->data, 1);
+    mutt_sanitize_filename (prefix->data, 1, 1);
     mutt_buffer_printf (buf, "%s/%s", NONULL (Tempdir), mutt_b2s (prefix));
     if (lstat (mutt_b2s (buf), &sb) == -1 && errno == ENOENT)
       goto out;
@@ -1172,7 +1172,8 @@ void _mutt_buffer_quote_filename (BUFFER *d, const char *f, int add_outer)
 
 static const char safe_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+@{}._-:%/";
 
-void mutt_buffer_sanitize_filename (BUFFER *d, const char *f, short slash)
+void mutt_buffer_sanitize_filename (BUFFER *d, const char *f, short remove_slash,
+                                    short allow_8bit)
 {
   mutt_buffer_clear (d);
 
@@ -1181,7 +1182,9 @@ void mutt_buffer_sanitize_filename (BUFFER *d, const char *f, short slash)
 
   for (; *f; f++)
   {
-    if ((slash && *f == '/') || !strchr (safe_chars, *f))
+    if (allow_8bit && (*f & 0x80))
+      mutt_buffer_addch (d, *f);
+    else if ((remove_slash && *f == '/') || !strchr (safe_chars, *f))
       mutt_buffer_addch (d, '_');
     else
       mutt_buffer_addch (d, *f);

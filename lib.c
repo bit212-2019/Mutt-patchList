@@ -574,13 +574,15 @@ success:
 
 static const char safe_chars[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+@{}._-:%/";
 
-void mutt_sanitize_filename (char *f, short slash)
+void mutt_sanitize_filename (char *f, short remove_slash, short allow_8bit)
 {
   if (!f) return;
 
   for (; *f; f++)
   {
-    if ((slash && *f == '/') || !strchr (safe_chars, *f))
+    if (allow_8bit && (*f & 0x80))
+      continue;
+    if ((remove_slash && *f == '/') || !strchr (safe_chars, *f))
       *f = '_';
   }
 }
